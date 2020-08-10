@@ -1,0 +1,45 @@
+.notify-box {
+  margin: 4px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 350px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.notify-box>.go-out {
+  margin-left: 350px;
+}
+
+.notify-box>.notify {
+  border-left-width: 4px !important;
+  transition: all 500ms linear;
+  width: 100%;
+  padding: 4px 16px !important;
+  margin-bottom: 4px;
+  border-left-style: solid;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.notify-box>.information {
+  border-color: #ed8936;
+  color: #c05621;
+  background-color: #fffaf0;
+}
+
+.notify-box>.success {
+  border-color: #48bb78;
+  color: #2f855a;
+  background-color: #f0fff4
+}
+
+.notify-box>.warning {
+  border-color: #f56565;
+  color: #c53030;
+  background-color: #fff5f5;
+}
+
+.notify>.f-bold {
+  font-weight: 700 !important;
+}

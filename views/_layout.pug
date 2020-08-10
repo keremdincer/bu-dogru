@@ -1,0 +1,88 @@
+mixin Tree(id, label, children)
+  - var visible = document && children.find(child => child.id === document.id)
+  ul(class="pl-4 my-2")
+    li(class="folder")
+      a(href='#', class="flex items-center")
+        i(class="gg-folder mr-3 text-blue-400 "+ (visible ? 'bg-blue-400' : ''))
+        span= label
+    li
+      ul(class="sub-folders ml-3 pl-4 py-1 border-l border-gray-500 border-dashed " + (visible ? '' : 'hidden'))
+        each child in children
+          - var active = document && document.id == child.id
+          li
+            a(href='/folders/' + id + '/' + child.id, class="flex items-center my-2")
+              i(class="gg-file-document mr-3 " + (active ? 'bg-orange-400 text-red-500' : 'text-orange-400'))
+              span(class="truncate mr-3", title=child.title)= child.title
+        li
+          form(class="flex items-center my-0 mr-4", action='/folders/' + id, method="post")
+            i(class="gg-file-add mr-3 text-green-500", style="min-width: 14px;")
+            label(class="text-green-800 mr-2", for="folder-" + id + "-document-name") Ekle:
+            input(type="text", id="folder-" + id + "-document-name", name="title", autocomplete="off", class="flex-1 border px-2 py-1 rounded outline-none focus:shadow-outline", placeholder="Bölüm Başlığı")
+doctype html
+html(lang="tr" class="w-screen h-screen")
+  head
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="description", content="Documentation creator, viewer")
+
+    link(rel="apple-touch-icon", sizes="180x180" href="/site/apple-touch-icon.png")
+    link(rel="icon", type="image/png", sizes="32x32", href="/site/favicon-32x32.png")
+    link(rel="icon", type="image/png", sizes="16x16", href="/site/favicon-16x16.png")
+    link(rel="manifest", href="/site/site.webmanifest")
+
+    link(href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap", rel="stylesheet")
+    link(href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap", rel="stylesheet")
+    link(href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap", rel="stylesheet")
+
+    link(rel="stylesheet", href="https://css.gg/css")
+    link(rel="stylesheet", href="/css/style.css")
+    link(rel="stylesheet", href="/css/notify.css")
+
+    block styles
+
+    title= 'Bu Doğru - ' + title
+
+  body(class="flex p-16 bg-gray-100 subpixel-antialiased w-screen h-screen")
+    div#sidebar(class="w-84 flex flex-col shadow-lg p-2")
+      //- Site ikonu ve başlığı
+      div(class="flex")
+        img(src="/site/android-chrome-192x192.png", alt="App Logo", class="w-12 h-12")
+        div(class="ml-4")
+          div(class="font-semibold text-lg text-blue-800") Bu Doğru
+          div(class="text-gray-700")= currentUser
+
+      form(class="flex items-center px-4 mt-8 mb-0 mr-4", action="/folders", method="post")
+        i(class="gg-folder-add mr-2 text-blue-400")
+        label(class="text-blue-700 mr-2", for="document-title-input") Ekle:
+        input(type="text", id="document-title-input", autocomplete="off", name="title", class="flex-1 border px-2 py-1 rounded outline-none focus:shadow-outline", placeholder="Doküman Başlığı")
+
+      hr(class="mt-2")
+
+      //- Search bar
+      //- div(class="flex items-center text-gray-700 mt-4 mx-2 py-2 border-b")
+      //-   div(class="px-3")
+      //-     span(class="gg-search")
+      //-   input(class="outline-none bg-transparent p-2 font-semibold", placeholder="Dokümantasyon Ara")
+
+      //- Dokümentasyon Listesi
+      div(class="mt-2 flex-1 overflow-y-auto")
+        each folder in folders
+          +Tree(folder.id, folder.title, folder.documents)
+
+    div(class="flex-1 flex bg-white shadow-lg overflow-y-auto")
+      block content
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js")
+    script(src="/js/notify.js")
+    script.
+      _.each(document.querySelectorAll('.folder'), function (folder) {
+        folder.addEventListener('click', function (event) {
+          event.preventDefault()
+          event.stopPropagation()
+          event.currentTarget.querySelector('i').classList.toggle('bg-blue-400')
+          var list = event.currentTarget.parentElement.querySelector('ul')
+          list.classList.toggle('hidden')
+        })
+      })
+
+    block scripts

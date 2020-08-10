@@ -1,0 +1,33 @@
+extends _layout
+
+block styles
+  link(rel="stylesheet", href="/css/prism.css")
+
+block scripts
+  script(src="/js/prism.js")
+  script(src="https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+  script(src="/js/create-page.js")
+
+//- Input mixin
+mixin Input(type, name, label)
+  div(class="p-2")
+    label(class="block text-sm text-gray-600")= label
+    input(type=type, name=name, autocomplete="off" class="border p-1")
+
+block content
+
+  main(class="h-full flex-1 flex flex-col")
+
+    div(class="flex h-full flex-1")
+      div#markdown-editor(class="flex flex-col flex-1 overflow-y-auto hidden")
+        div(class="bg-blue-500 text-white px-4 py-2 text-2xl") Editor
+        div(class="p-1 flex flex-1")
+          textarea#markdown(class="flex-1 p-2 font-code outline-none focus:shadow-outline resize-none")= document.content
+      div(class="flex flex-col flex-1")
+        div(class="bg-indigo-500 text-white px-4 py-2 text-2xl flex justify-between items-center")
+          span= 'Doküman (' + createdBy + ')'
+          button#toggle-code(class="p-2 focus:outline-none flex items-center")
+            i(class="gg-code-slash")
+            span(class="ml-4 text-lg") Code
+        div#output(class="flex-1 markdown p-2 bg-red-100 overflow-y-auto")
+
